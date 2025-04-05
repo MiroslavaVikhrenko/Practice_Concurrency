@@ -1,4 +1,6 @@
-﻿namespace Task2_20250405
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Task2_20250405
 {
     /*
      Создайте базу данных хранящую информацию о «Спортивных мероприятиях». 
@@ -34,30 +36,36 @@
         // 4) Отобразите информацию о каждом мероприятии, включая его название, дату, место проведения и другие детали.
         public static void DisplayAllSportEvents(ApplicationContext db)
         {
-            var sportEvents = db.SportEvents.ToList();
+            var query = EF.CompileQuery((ApplicationContext context) =>
+            context.SportEvents.ToList());
 
-            if (sportEvents.Any())
+        var sportEvents = query(db);
+
+        if (sportEvents.Any())
+        {
+            foreach (var sportEvent in sportEvents)
             {
-                foreach (var sportEvent in sportEvents)
-                {
-                    string formattedDate = sportEvent.Date.ToString("MMMM dd, yyyy h:mm tt");
-                    Console.WriteLine($"ID: {sportEvent.Id} | Name: {sportEvent.Name} | Venue: {sportEvent.Venue} | Date: {formattedDate}");
-                }
+                string formattedDate = sportEvent.Date.ToString("MMMM dd, yyyy h:mm tt");
+                Console.WriteLine($"ID: {sportEvent.Id}, Name: {sportEvent.Name}, Venue: {sportEvent.Venue}, Date: {formattedDate}");
             }
-            else
-            {
-                Console.WriteLine("No sport events found in the database.");
-            }
+        }
+        else
+        {
+            Console.WriteLine("No sport events found in the database.");
+        }
         }
         // 3) Удалите выбранное мероприятие из базы данных.
         public static void DeleteSportEvent(int id, ApplicationContext db)
         {
-            var sportEvent = db.SportEvents.FirstOrDefault(se => se.Id == id);
+            var query = EF.CompileQuery((ApplicationContext context, int eventId) =>
+            context.SportEvents.FirstOrDefault(se => se.Id == eventId));
+
+            var sportEvent = query(db, id);
 
             if (sportEvent != null)
             {
+                // Remove the event from the DbSet
                 db.SportEvents.Remove(sportEvent);
-
                 db.SaveChanges();
             }
             else
@@ -68,7 +76,10 @@
         // 2) Обновите информацию о мероприятии, включая название, дату, место проведения и другие детали.
         public static void UpdateSportEvent(int id, string updatedName, string updatedVenue, DateTime newDate, ApplicationContext db)
         {
-            var sportEvent = db.SportEvents.FirstOrDefault(se => se.Id == id);
+            var query = EF.CompileQuery((ApplicationContext context, int eventId) =>
+           context.SportEvents.FirstOrDefault(se => se.Id == eventId));
+
+            var sportEvent = query(db, id);
 
             if (sportEvent != null)
             {
