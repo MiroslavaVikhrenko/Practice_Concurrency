@@ -23,6 +23,25 @@
 
                 // 2) Обновите информацию о мероприятии, включая название, дату, место проведения и другие детали.
                 UpdateSportEvent(2, "Calgary Marathon", "Calgary", DateTime.Now.AddDays(+33), db);
+
+                // 3) Удалите выбранное мероприятие из базы данных.
+                DeleteSportEvent(6, db);
+            }
+        }
+        // 3) Удалите выбранное мероприятие из базы данных.
+        public static void DeleteSportEvent(int id, ApplicationContext db)
+        {
+            var sportEvent = db.SportEvents.FirstOrDefault(se => se.Id == id);
+
+            if (sportEvent != null)
+            {
+                db.SportEvents.Remove(sportEvent);
+
+                db.SaveChanges();
+            }
+            else
+            {
+                Console.WriteLine($"Sport event with ID {id} not found.");
             }
         }
         // 2) Обновите информацию о мероприятии, включая название, дату, место проведения и другие детали.
