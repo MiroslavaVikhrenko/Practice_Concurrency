@@ -26,6 +26,27 @@
 
                 // 3) Удалите выбранное мероприятие из базы данных.
                 DeleteSportEvent(6, db);
+
+                // 4) Отобразите информацию о каждом мероприятии, включая его название, дату, место проведения и другие детали.
+                DisplayAllSportEvents(db);
+            }
+        }
+        // 4) Отобразите информацию о каждом мероприятии, включая его название, дату, место проведения и другие детали.
+        public static void DisplayAllSportEvents(ApplicationContext db)
+        {
+            var sportEvents = db.SportEvents.ToList();
+
+            if (sportEvents.Any())
+            {
+                foreach (var sportEvent in sportEvents)
+                {
+                    string formattedDate = sportEvent.Date.ToString("MMMM dd, yyyy h:mm tt");
+                    Console.WriteLine($"ID: {sportEvent.Id} | Name: {sportEvent.Name} | Venue: {sportEvent.Venue} | Date: {formattedDate}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No sport events found in the database.");
             }
         }
         // 3) Удалите выбранное мероприятие из базы данных.
