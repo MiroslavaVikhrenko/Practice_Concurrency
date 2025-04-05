@@ -22,9 +22,27 @@
                 CreateNewSportEvent(sportEvent, db);
 
                 // 2) Обновите информацию о мероприятии, включая название, дату, место проведения и другие детали.
+                UpdateSportEvent(2, "Calgary Marathon", "Calgary", DateTime.Now.AddDays(+33), db);
             }
         }
         // 2) Обновите информацию о мероприятии, включая название, дату, место проведения и другие детали.
+        public static void UpdateSportEvent(int id, string updatedName, string updatedVenue, DateTime newDate, ApplicationContext db)
+        {
+            var sportEvent = db.SportEvents.FirstOrDefault(se => se.Id == id);
+
+            if (sportEvent != null)
+            {
+                sportEvent.Name = updatedName;
+                sportEvent.Venue = updatedVenue;
+                sportEvent.Date = newDate;
+
+                db.SaveChanges();
+            }
+            else
+            {
+                Console.WriteLine($"Sport event with ID {id} not found.");
+            }
+        }
 
         // 1) Создайте новое спортивное мероприятие с указанием названия, даты, места проведения и других деталей.
         public static void CreateNewSportEvent(SportEvent se, ApplicationContext db)
