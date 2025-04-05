@@ -18,10 +18,20 @@
                 SeedDatabase(db);
 
                 // 1) Создайте новое спортивное мероприятие с указанием названия, даты, места проведения и других деталей.
+                SportEvent sportEvent = new SportEvent() { Name = "100k run", Date = DateTime.Now.AddDays(+27), Venue = "Vancouver" };
+                CreateNewSportEvent(sportEvent, db);
+
+                // 2) Обновите информацию о мероприятии, включая название, дату, место проведения и другие детали.
             }
         }
+        // 2) Обновите информацию о мероприятии, включая название, дату, место проведения и другие детали.
 
         // 1) Создайте новое спортивное мероприятие с указанием названия, даты, места проведения и других деталей.
+        public static void CreateNewSportEvent(SportEvent se, ApplicationContext db)
+        {
+            db.SportEvents.Add(se);
+            db.SaveChanges();
+        }
         public static void SeedDatabase(ApplicationContext db)
         {
             db.SportEvents.AddRange(new List<SportEvent>
